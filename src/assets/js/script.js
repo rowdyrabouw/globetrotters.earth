@@ -16,8 +16,6 @@ async function initMap() {
     const placeFeature = featureStyleFunctionOptions.feature;
     const visitedBy = countries[placeFeature.placeId];
 
-    console.info(">> placeFeature", placeFeature);
-
     let fillColor;
     switch (visitedBy) {
       case 1:
