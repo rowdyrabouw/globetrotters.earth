@@ -1,0 +1,241 @@
+---
+title: globetrotters.earth
+layout: layouts/page.njk
+---
+
+{%- if settings.environment == "DEV" %}
+
+<style>
+  .error {
+    color: red !important;
+  }
+  #locationResult {
+    color: green;
+    font-weight: bold;
+    margin-block-start: 16px;
+  }
+  #locationForm {
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    z-index: 10;
+    height: fit-content;
+    width: fit-content;
+    background-color: white;
+    padding: 16px;
+    border-radius: 4px;
+
+    & div:has(label) {
+      margin-bottom: 12px;
+      & label {
+        font-weight: bold;
+        margin-bottom: 4px;
+        display: block;
+      }
+      & input,
+      & select {
+        display: block;
+        width: 300px;
+      }
+      & select {
+        width: 308px;
+      }
+      & input[required] {
+        border: none;
+        padding: 0;
+      }
+    }
+
+    & div.readonly {
+      margin-block-start: 32px;
+    }
+  }
+
+  #infowindow-content {
+    display: none;
+  }
+
+  #map #infowindow-content {
+    display: inline;
+    padding-block-start: 40px;
+  }
+
+  .gm-style-iw-chr {
+    display: none;
+  }
+
+  .gm-style-iw-d {
+    padding-block-start: 12px;
+  }
+</style>
+
+<form id="locationForm">
+  <div>
+    <label for="location">Location</label>
+    <input id="location" class="controls" type="text" />
+  </div>
+
+  <div>
+    <label for="type">Type</label>
+    <select id="type" name="type">
+      <option value="city">City</option>
+      <option value="country">Country</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="visitedBy">Visited by</label>
+    <select id="visitedBy" name="visitedBy">
+      <option value="1">Rowdy</option>
+      <option value="3">Together</option>
+      <option value="2">Rosita</option>
+    </select>
+  </div>
+
+  <div class="readonly">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" required />
+  </div>
+
+  <div>
+    <label for="placeId">Place Id</label>
+    <input type="text" id="placeId" name="placeId" required />
+  </div>
+
+  <div>
+    <label for="latitude">Latitude</label>
+    <input type="text" id="latitude" name="latitude" required />
+  </div>
+
+  <div>
+    <label for="longitude">Longitude</label>
+    <input type="text" id="longitude" name="longitude" required />
+  </div>
+
+  <div>
+    <input type="submit" value="Save location" />
+  </div>
+
+  <div id="locationResult" aria-atomic="true" aria-live="polite"></div>
+</form>
+
+<script>
+  const locationForm = document.querySelector("#locationForm");
+  const locationResult = document.querySelector("#locationResult");
+
+  locationForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    locationResult.innerHTML = "";
+    locationResult.classList.remove("error");
+
+    let response;
+    const formData = new FormData(e.target);
+    if (formData.get("type") === "city") {
+      response = await fetch("http://localhost:3000/city", {
+        method: "POST",
+        body: JSON.stringify({
+          name: formData.get("name"),
+          latitude: formData.get("latitude"),
+          longitude: formData.get("longitude"),
+          visitedBy: parseInt(formData.get("visitedBy")),
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+    } else {
+      response = await fetch("http://localhost:3000/country", {
+        method: "POST",
+        body: JSON.stringify({
+          name: formData.get("name"),
+          placeId: formData.get("placeId"),
+          visitedBy: parseInt(formData.get("visitedBy")),
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      });
+    }
+
+    const json = await response.json();
+    if (!response.ok) {
+      console.error(json);
+      locationResult.innerHTML = json.error;
+      locationResult.classList.add("error");
+    } else {
+      locationResult.innerHTML = `Document ${json.id} added`;
+      locationForm.reset();
+    }
+  });
+</script>
+<div id="map"></div>
+<div id="infowindow-content">
+  <span id="place-name" class="title"></span><br />
+  <span id="place-id"></span><br />
+  <span id="place-geometry"></span><br />
+  <span id="place-address"></span>
+</div>
+
+<script>
+  function initMap() {
+    const map = new google.maps.Map(document.getElementById("map"), {
+      center: { lat: 52.0115205, lng: 4.7104633 },
+      zoom: 8,
+    });
+    const input = document.querySelector("#location");
+    // Specify just the place data fields that you need.
+    const autocomplete = new google.maps.places.Autocomplete(input, {
+      fields: ["place_id", "geometry", "formatted_address", "name"],
+    });
+
+    autocomplete.bindTo("bounds", map);
+
+    const infowindow = new google.maps.InfoWindow();
+    const infowindowContent = document.getElementById("infowindow-content");
+
+    infowindow.setContent(infowindowContent);
+
+    const marker = new google.maps.Marker({ map: map });
+
+    marker.addListener("click", () => {
+      infowindow.open(map, marker);
+    });
+
+    document.querySelector("#location").placeholder = "";
+    autocomplete.addListener("place_changed", () => {
+      infowindow.close();
+
+      const place = autocomplete.getPlace();
+
+      if (!place.geometry || !place.geometry.location) {
+        return;
+      }
+
+      if (place.geometry.viewport) {
+        map.fitBounds(place.geometry.viewport);
+      } else {
+        map.setCenter(place.geometry.location);
+        map.setZoom(17);
+      }
+
+      marker.setPlace({
+        placeId: place.place_id,
+        location: place.geometry.location,
+      });
+      marker.setVisible(true);
+      infowindowContent.children.namedItem("place-name").textContent = place.name;
+      infowindowContent.children.namedItem("place-id").textContent = place.place_id;
+      infowindowContent.children.namedItem("place-geometry").textContent = `${place.geometry.location.lat()}, ${place.geometry.location.lng()}`;
+      infowindowContent.children.namedItem("place-address").textContent = place.formatted_address;
+      infowindow.open(map, marker);
+      document.querySelector("#name").value = place.name;
+      document.querySelector("#placeId").value = place.place_id;
+      document.querySelector("#latitude").value = place.geometry.location.lat();
+      document.querySelector("#longitude").value = place.geometry.location.lng();
+    });
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=places&v=weekly" defer></script>
+
+{% endif %}
