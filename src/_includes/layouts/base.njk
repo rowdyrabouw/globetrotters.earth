@@ -3,16 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- SEO -->
     <title>{{ title }}</title>
     <meta name="description" content="{{ description or site.description }}" />
     <link rel="canonical" href="{{ site.url }}{{ page.url | toCanonicalUrl }}" />
-    <!-- styles -->
     <link rel="stylesheet" href="/assets/css/style.css" />
-    <!-- javascript -->
-    <script type="module" src="/assets/js/script.js"></script>
-    <!-- analytics -->
-    {%- if settings.environment == "PRD" %}
+    {%- if map %}
+    <script type="module" src="/assets/js/script.mjs"></script>
+    {% endif %} {%- if settings.environment == "PRD" %}
     <script id="plausible" defer data-domain="globetrotters.earth" src="https://plausible.io/js/script.js"></script>
     {% endif %}
   </head>
