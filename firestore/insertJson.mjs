@@ -77,17 +77,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const myCollection = collection(db, "countries");
+const countryCollection = collection(db, "countries");
 
 const importJSON = async () => {
   for (const country of data) {
-    const myDocumentData = {
+    const documentData = {
       name: country.name,
       placeId: country.placeId,
       visitedBy: country.visitedBy,
     };
     //* uncomment the next line if you really want to add the documents *//
-    // await addDoc(myCollection, myDocumentData);
+    // await addDoc(countryCollection, documentData);
   }
   terminate(db);
 };
