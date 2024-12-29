@@ -7,7 +7,7 @@ async function initMap() {
   const { Map } = await google.maps.importLibrary("maps");
   const map = new Map(document.getElementById("map"), {
     center: { lat: 50, lng: 15 },
-    zoom: 4,
+    zoom: 5,
     mapId: "498f42e161ed624e",
     options: `styles: ${mapStyles}`,
   });
@@ -41,18 +41,21 @@ async function initMap() {
   let pin;
   for (const city of cities) {
     const pinRowdy = new PinElement({
+      scale: 0.75,
       borderColor: "#FFFFFF",
       background: "#E74035",
       glyphColor: "#FFFFFF",
     });
 
     const pinRosita = new PinElement({
+      scale: 0.75,
       borderColor: "#FFFFFF",
       background: "#49A1E8",
       glyphColor: "#FFFFFF",
     });
 
     const pinTogether = new PinElement({
+      scale: 0.75,
       borderColor: "#366321",
       background: "#A6FF6F",
       glyphColor: "#366321",
