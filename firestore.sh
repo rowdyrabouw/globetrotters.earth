@@ -1,3 +1,4 @@
 clear
-# node --env-file=.env firestore/insertJson.mjs
-node --env-file=.env firestore/getAll.mjs
+# node --env-file=.env firestore/insertCountryJson.mjs
+node --env-file=.env firestore/getCities.mjs
+node --env-file=.env firestore/getCountries.mjs

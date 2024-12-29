@@ -1,4 +1,5 @@
 import { countries } from "./countries.js";
+import { cities } from "./cities.js";
 import { mapStyles } from "./mapStyles.js";
 const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
 
@@ -37,44 +38,45 @@ async function initMap() {
     };
   };
 
-  const rowdyLatLng = { lat: 54.6, lng: -5.9 };
-  const pinRowdy = new PinElement({
-    borderColor: "#FFFFFF",
-    background: "#E74035",
-    glyphColor: "#FFFFFF",
-  });
-  new google.maps.marker.AdvancedMarkerElement({
-    position: rowdyLatLng,
-    map,
-    title: "Belfast",
-    content: pinRowdy.element,
-  });
+  let pin;
+  for (const city of cities) {
+    const pinRowdy = new PinElement({
+      borderColor: "#FFFFFF",
+      background: "#E74035",
+      glyphColor: "#FFFFFF",
+    });
 
-  const rositaLatLng = { lat: 37.2, lng: -8.8 };
-  const pinRosita = new PinElement({
-    borderColor: "#FFFFFF",
-    background: "#49A1E8",
-    glyphColor: "#FFFFFF",
-  });
-  new google.maps.marker.AdvancedMarkerElement({
-    position: rositaLatLng,
-    map,
-    title: "Aljezur",
-    content: pinRosita.element,
-  });
+    const pinRosita = new PinElement({
+      borderColor: "#FFFFFF",
+      background: "#49A1E8",
+      glyphColor: "#FFFFFF",
+    });
 
-  const togetherLatLng = { lat: 48.86, lng: 2.34 };
-  const pinTogether = new PinElement({
-    borderColor: "#366321",
-    background: "#A6FF6F",
-    glyphColor: "#366321",
-  });
-  new google.maps.marker.AdvancedMarkerElement({
-    position: togetherLatLng,
-    map,
-    title: "Paris",
-    content: pinTogether.element,
-  });
+    const pinTogether = new PinElement({
+      borderColor: "#366321",
+      background: "#A6FF6F",
+      glyphColor: "#366321",
+    });
+
+    const { name, visitedBy, latitude, longitude } = city;
+    switch (visitedBy) {
+      case 1:
+        pin = pinRowdy;
+        break;
+      case 2:
+        pin = pinRosita;
+        break;
+      case 3:
+        pin = pinTogether;
+        break;
+    }
+    new google.maps.marker.AdvancedMarkerElement({
+      map,
+      title: name,
+      position: { lat: parseFloat(latitude), lng: parseFloat(longitude) },
+      content: pin.element,
+    });
+  }
 }
 
 initMap();
