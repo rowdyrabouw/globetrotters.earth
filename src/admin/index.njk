@@ -6,6 +6,10 @@ layout: layouts/page.njk
 {%- if settings.environment == "DEV" %}
 
 <style>
+  body {
+    font-family: Roboto, Arial, sans-serif;
+  }
+
   .error {
     color: red !important;
   }
@@ -35,6 +39,7 @@ layout: layouts/page.njk
       }
       & input,
       & select {
+        font-family: Roboto, Arial, sans-serif;
         display: block;
         width: 300px;
       }
