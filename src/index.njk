@@ -4,6 +4,55 @@ layout: layouts/page.njk
 map: true
 ---
 
+<style>
+  body {
+    font-family: Roboto, Arial, sans-serif;
+  }
+
+  #legend {
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    z-index: 10;
+    height: fit-content;
+    width: fit-content;
+    background-color: white;
+    padding: 16px 16px 2px 16px;
+    border-radius: 2px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px;
+
+    & div {
+      display: flex;
+      align-items: flex-end;
+      margin-bottom: 12px;
+      gap: 11px;
+    }
+
+    & span:first-of-type {
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border-radius: 2px;
+    }
+
+    & span:nth-of-type(2) {
+      display: inline-block;
+      padding-bottom: 4px;
+    }
+
+    & img {
+      height: 30px;
+    }
+  }
+</style>
+
+<div id="legend">
+  <div><img src="/assets/img/pin-rowdy.png" alt="Rowdy" /><span style="background-color: #fb7b7b"></span><span>Rowdy</span></div>
+  <div><img src="/assets/img/pin-rosita.png" alt="Rosita" /><span style="background-color: #a0ccef"></span><span>Rosita</span></div>
+  <div><img src="/assets/img/pin-together.png" alt="Together" /><span style="background-color: #7bbb7b"></span><span>Together</span></div>
+  <div><img src="/assets/img/pin-seperate.png" alt="Both" /><span style="background-color: #a788e6"></span><span>Both</span></div>
+</div>
+
 <div id="map"></div>
 
 <!-- prettier-ignore -->
