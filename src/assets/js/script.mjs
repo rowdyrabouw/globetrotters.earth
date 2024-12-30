@@ -23,7 +23,7 @@ async function initMap() {
         fillColor = "red";
         break;
       case 2:
-        fillColor = "blue";
+        fillColor = "#49A1E8";
         break;
       case 3:
         fillColor = "green";
