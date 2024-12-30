@@ -29,6 +29,9 @@ async function initMap() {
         fillColor = "green";
         break;
       case 4:
+        fillColor = "#6C2DE8";
+        break;
+      case 5:
         fillColor = "#FF6906";
         break;
     }
@@ -61,6 +64,13 @@ async function initMap() {
       glyphColor: "#366321",
     });
 
+    const pinSeperate = new PinElement({
+      scale: 0.75,
+      borderColor: "#FFFFFF",
+      background: "#6C2DE8",
+      glyphColor: "#FFFFFF",
+    });
+
     const { name, visitedBy, latitude, longitude } = city;
     switch (visitedBy) {
       case 1:
@@ -71,6 +81,9 @@ async function initMap() {
         break;
       case 3:
         pin = pinTogether;
+        break;
+      case 4:
+        pin = pinSeperate;
         break;
     }
     new google.maps.marker.AdvancedMarkerElement({
