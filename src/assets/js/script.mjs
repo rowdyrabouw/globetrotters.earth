@@ -64,7 +64,7 @@ async function initMap() {
       glyphColor: "#366321",
     });
 
-    const pinSeperate = new PinElement({
+    const pinSeparate = new PinElement({
       scale: 0.75,
       borderColor: "#FFFFFF",
       background: "#6C2DE8",
@@ -83,7 +83,7 @@ async function initMap() {
         pin = pinTogether;
         break;
       case 4:
-        pin = pinSeperate;
+        pin = pinSeparate;
         break;
     }
     new google.maps.marker.AdvancedMarkerElement({
