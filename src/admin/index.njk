@@ -243,6 +243,6 @@ layout: layouts/page.njk
     });
   }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=places&v=weekly" defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ settings.googleMapsApiKey }}&callback=initMap&libraries=places&v=weekly" defer></script>
 
 {% endif %}
